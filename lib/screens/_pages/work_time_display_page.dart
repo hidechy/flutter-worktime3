@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../extensions/extensions.dart';
+import '../../models/genba_worktime.dart';
 import '../../models/wts_item.dart';
 import '../../models/wts_time.dart';
 import '../../utility/utility.dart';
@@ -20,6 +21,8 @@ class WorkTimeDisplayPage extends ConsumerWidget {
   late WtsItem wtsItem;
 
   List<WtsTime> wtsTimes = [];
+
+  Map<String, String> startEndMap = {};
 
   late WidgetRef _ref;
 
@@ -40,20 +43,18 @@ class WorkTimeDisplayPage extends ConsumerWidget {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, position) {
-                  var pos = position - 1;
+                  final pos = position - 1;
 
                   final exYm = ym.split('-');
 
-                  final listdate = DateTime(
-                    exYm[0].toInt(),
-                    exYm[1].toInt(),
-                    position,
-                  );
+                  final listdate =
+                      DateTime(exYm[0].toInt(), exYm[1].toInt(), position);
 
+                  //-------------------------//
                   if (position == 0) {
                     return Container(
-                      margin: EdgeInsets.all(20),
-                      padding: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         border: Border.all(
                           color: Colors.white.withOpacity(0.8),
@@ -64,8 +65,11 @@ class WorkTimeDisplayPage extends ConsumerWidget {
                         children: [
                           Text(wtsItem.company),
                           Text(wtsItem.genba),
+
+                          //
+
                           Container(
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.2),
                             ),
@@ -93,10 +97,36 @@ class WorkTimeDisplayPage extends ConsumerWidget {
                               ],
                             ),
                           ),
+
+                          //
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(),
+                              Row(
+                                children: [
+                                  Text((startEndMap['start'] == null)
+                                      ? ''
+                                      : startEndMap['start']!),
+                                  const SizedBox(width: 10),
+                                  const Text('〜'),
+                                  const SizedBox(width: 10),
+                                  Text((startEndMap['end'] == null)
+                                      ? ''
+                                      : startEndMap['end']!),
+                                ],
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     );
                   }
+                  //-------------------------//
+
+                  final start = wtsTimes[pos].start;
+                  final end = wtsTimes[pos].end;
 
                   return Container(
                     padding: const EdgeInsets.all(10),
@@ -127,10 +157,24 @@ class WorkTimeDisplayPage extends ConsumerWidget {
                               : Row(
                                   children: [
                                     Expanded(
-                                      child: Text(wtsTimes[pos].start),
+                                      child: Text(
+                                        start,
+                                        style: TextStyle(
+                                          color: (start != startEndMap['start'])
+                                              ? Colors.yellowAccent
+                                              : Colors.white,
+                                        ),
+                                      ),
                                     ),
                                     Expanded(
-                                      child: Text(wtsTimes[pos].end),
+                                      child: Text(
+                                        end,
+                                        style: TextStyle(
+                                          color: (end != startEndMap['end'])
+                                              ? Colors.yellowAccent
+                                              : Colors.white,
+                                        ),
+                                      ),
                                     ),
                                     Expanded(
                                       child: Text(wtsTimes[pos].work),
@@ -165,6 +209,15 @@ class WorkTimeDisplayPage extends ConsumerWidget {
   void makeWtsList() {
     wtsTimes = [];
 
+    /////////////////////////////////////
+    final workTimeState = _ref.watch(workTimeProvider);
+
+    final timeMap = <String, GenbaWorkTime>{};
+    workTimeState.forEach((element) {
+      timeMap['${element.company}|${element.genba}'] = element;
+    });
+    /////////////////////////////////////
+
     final workTimeSummaryState = _ref.watch(workTimeSummaryProvider);
 
     workTimeSummaryState.forEach((element) {
@@ -174,6 +227,13 @@ class WorkTimeDisplayPage extends ConsumerWidget {
         element.wtsTimes.forEach((element2) {
           wtsTimes.add(element2);
         });
+
+        if (timeMap['${element.company}|${element.genba}'] != null) {
+          startEndMap['start'] =
+              timeMap['${element.company}|${element.genba}']!.start;
+          startEndMap['end'] =
+              timeMap['${element.company}|${element.genba}']!.end;
+        }
       }
     });
   }
