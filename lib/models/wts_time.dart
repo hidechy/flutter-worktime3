@@ -13,5 +13,5 @@ class WtsTime {
   String end;
   String work;
   String rest;
-  int youbiNum;
+  String youbiNum;
 }

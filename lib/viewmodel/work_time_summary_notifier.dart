@@ -1,12 +1,12 @@
 // ignore_for_file: avoid_dynamic_calls
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:worktime3/models/wts_time.dart';
 
 import '../data/http/client.dart';
 import '../data/http/path.dart';
 import '../extensions/extensions.dart';
 import '../models/wts_item.dart';
+import '../models/wts_time.dart';
 import '../utility/utility.dart';
 
 ////////////////////////////////////////////////
@@ -33,7 +33,7 @@ class WorkTimeSummaryNotifier extends StateNotifier<List<WtsItem>> {
       for (var i = 0; i < value['data'].length.toString().toInt(); i++) {
         final exValue = value['data'][i].toString().split(';');
 
-        final listItem = exValue[exValue.length].split('/');
+        final listItem = exValue[exValue.length - 1].split('/');
 
         final list2 = <WtsTime>[];
         listItem.forEach((element) {
@@ -46,7 +46,7 @@ class WorkTimeSummaryNotifier extends StateNotifier<List<WtsItem>> {
               end: exElement[2],
               work: exElement[3],
               rest: exElement[4],
-              youbiNum: exElement[5].toInt(),
+              youbiNum: exElement[5],
             ),
           );
         });
@@ -57,8 +57,8 @@ class WorkTimeSummaryNotifier extends StateNotifier<List<WtsItem>> {
             workSum: exValue[1],
             company: exValue[2],
             genba: exValue[3],
-            salary: exValue[4].toInt(),
-            hourSalary: exValue[5].toInt(),
+            salary: exValue[4],
+            hourSalary: exValue[5],
             wtsTimes: list2,
           ),
         );
@@ -111,9 +111,14 @@ http://toyohide.work/BrainLog/api/worktimesummary
       //   getCategory.add(category1);
       // }
       //
-    }).catchError((error, _) {
-      utility.showError('予期せぬエラーが発生しました');
     });
+
+    //
+    //
+    //
+    // .catchError((error, _) {
+    //   utility.showError('予期せぬエラーが発生しました');
+    // });
   }
 }
 

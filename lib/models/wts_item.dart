@@ -15,7 +15,7 @@ class WtsItem {
   String workSum;
   String company;
   String genba;
-  int salary;
-  int hourSalary;
+  String salary;
+  String hourSalary;
   List<WtsTime> wtsTimes;
 }
