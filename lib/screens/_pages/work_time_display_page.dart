@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:worktime3/screens/work_time_input_screen.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/genba_worktime.dart';
@@ -186,7 +187,15 @@ class WorkTimeDisplayPage extends ConsumerWidget {
                                 ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    WorkTimeInputScreen(date: listdate),
+                              ),
+                            );
+                          },
                           icon: Icon(
                             Icons.info_outline,
                             color: Colors.white.withOpacity(0.6),
