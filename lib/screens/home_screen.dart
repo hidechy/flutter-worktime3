@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../viewmodel/work_time_summary_notifier.dart';
+import '../viewmodel/work_time_notifier.dart';
 import '_pages/work_time_display_page.dart';
 
 class TabInfo {
