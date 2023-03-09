@@ -120,6 +120,10 @@ class WorkTimeInputScreen extends ConsumerWidget {
                                 .watch(workTimeInputProvider.notifier)
                                 .inputWorkTime(date: date);
 
+                            await ref
+                                .watch(workTimeSummaryProvider.notifier)
+                                .getWorkTimeSummary();
+
                             Navigator.pop(context);
                           },
                         ),
@@ -154,7 +158,10 @@ class WorkTimeInputScreen extends ConsumerWidget {
             )
           : TimeOfDay.now(),
       builder: (BuildContext context, Widget? child) {
-        return child!;
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
       },
     );
 
