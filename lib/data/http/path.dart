@@ -3,7 +3,8 @@ enum APIPath {
   getGenbaWorkTime,
   worktimemonthdata,
   worktimesummary,
-  getholiday
+  getholiday,
+  worktimeinsert
 }
 
 extension APIPathExtension on APIPath {
@@ -19,6 +20,8 @@ extension APIPathExtension on APIPath {
         return 'worktimesummary';
       case APIPath.getholiday:
         return 'getholiday';
+      case APIPath.worktimeinsert:
+        return 'worktimeinsert';
     }
   }
 }

@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_dynamic_calls
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:worktime3/state/work_time_setting/work_time_setting_notifier.dart';
+import 'package:worktime3/state/work_time_setting/work_time_setting_state.dart';
 
 import '../data/http/client.dart';
 import '../data/http/path.dart';
@@ -108,3 +110,41 @@ class WorkTimeNotifier extends StateNotifier<List<GenbaWorkTime>> {
 }
 
 ////////////////////////////////////////////////
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+final workTimeInputProvider =
+    StateNotifierProvider.autoDispose<WorkTimeInputNotifier, int>((ref) {
+  final client = ref.read(httpClientProvider);
+
+  final workTimeSettingState = ref.watch(workTimeSettingProvider);
+
+  final utility = Utility();
+
+  return WorkTimeInputNotifier(0, client, utility, workTimeSettingState);
+});
+
+class WorkTimeInputNotifier extends StateNotifier<int> {
+  WorkTimeInputNotifier(
+      super.state, this.client, this.utility, this.workTimeSettingState);
+
+  final HttpClient client;
+  final Utility utility;
+  final WorkTimeSettingState workTimeSettingState;
+
+  ///
+  Future<void> inputWorkTime({required DateTime date}) async {
+    final uploadData = <String, dynamic>{};
+    uploadData['date'] = date.yyyymmdd;
+    uploadData['work_start'] = workTimeSettingState.start;
+    uploadData['work_end'] = workTimeSettingState.end;
+
+    await client
+        .post(path: APIPath.worktimeinsert, body: uploadData)
+        .then((value) {})
+        .catchError((error, _) {
+      utility.showError('予期せぬエラーが発生しました');
+    });
+  }
+}
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

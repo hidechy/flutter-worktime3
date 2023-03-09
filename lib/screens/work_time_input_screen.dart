@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../extensions/extensions.dart';
 import '../state/work_time_setting/work_time_setting_notifier.dart';
 import '../utility/utility.dart';
+import '../viewmodel/work_time_notifier.dart';
 
 class WorkTimeInputScreen extends ConsumerWidget {
   WorkTimeInputScreen({super.key, required this.date});
@@ -33,6 +34,9 @@ class WorkTimeInputScreen extends ConsumerWidget {
           Column(
             children: [
               const SizedBox(height: 50),
+
+              //
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -45,6 +49,9 @@ class WorkTimeInputScreen extends ConsumerWidget {
                   ),
                 ],
               ),
+
+              //
+
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -54,7 +61,13 @@ class WorkTimeInputScreen extends ConsumerWidget {
                 child: Container(
                   margin: const EdgeInsets.all(20),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      Text(date.yyyymmdd),
+                      Divider(
+                        color: Colors.white.withOpacity(0.6),
+                        thickness: 2,
+                      ),
                       Row(
                         children: <Widget>[
                           const SizedBox(
@@ -65,12 +78,9 @@ class WorkTimeInputScreen extends ConsumerWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: IconButton(
                               icon: const Icon(Icons.access_time),
-
                               onPressed: () {
                                 displayTimePicker(flag: 'start');
                               },
-                              // onPressed: () =>
-                              //     _showStartTimePicker(context: context),
                               color: Colors.blueAccent,
                             ),
                           ),
@@ -87,21 +97,16 @@ class WorkTimeInputScreen extends ConsumerWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: IconButton(
                               icon: const Icon(Icons.access_time),
-
                               onPressed: () {
                                 displayTimePicker(flag: 'end');
                               },
-                              // onPressed: () =>
-                              //     _showEndTimePicker(context: context),
                               color: Colors.blueAccent,
                             ),
                           ),
                           Text(workTimeSettingState.end),
                         ],
                       ),
-                      const SizedBox(
-                        height: 30,
-                      ),
+                      const SizedBox(height: 30),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
@@ -110,14 +115,21 @@ class WorkTimeInputScreen extends ConsumerWidget {
                                 Colors.greenAccent.withOpacity(0.3),
                           ),
                           child: const Icon(Icons.input),
-                          onPressed: () {},
-//                          onPressed: () => _uploadWorktimeData(),
+                          onPressed: () async {
+                            await ref
+                                .watch(workTimeInputProvider.notifier)
+                                .inputWorkTime(date: date);
+
+                            Navigator.pop(context);
+                          },
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
+
+              //
             ],
           ),
         ],

@@ -37,8 +37,6 @@ class WorkTimeDisplayPage extends ConsumerWidget {
 
     final holidayState = ref.watch(holidayProvider);
 
-    final workTimeSettingState = ref.watch(workTimeSettingProvider);
-
     return Scaffold(
       body: Stack(fit: StackFit.expand, children: [
         _utility.getBackGround(),
@@ -56,76 +54,7 @@ class WorkTimeDisplayPage extends ConsumerWidget {
 
                   //-------------------------//
                   if (position == 0) {
-                    return Container(
-                      margin: const EdgeInsets.all(20),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.8),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(wtsItem.company),
-                          Text(wtsItem.genba),
-
-                          //
-
-                          Container(
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(wtsItem.workSum),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    alignment: Alignment.topRight,
-                                    child: Text((wtsItem.salary == '')
-                                        ? ''
-                                        : wtsItem.salary.toCurrency()),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    alignment: Alignment.topRight,
-                                    child: Text((wtsItem.hourSalary == '')
-                                        ? ''
-                                        : wtsItem.hourSalary.toCurrency()),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          //
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(),
-                              Row(
-                                children: [
-                                  Text((startEndMap['start'] == null)
-                                      ? ''
-                                      : startEndMap['start']!),
-                                  const SizedBox(width: 10),
-                                  const Text('〜'),
-                                  const SizedBox(width: 10),
-                                  Text((startEndMap['end'] == null)
-                                      ? ''
-                                      : startEndMap['end']!),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
+                    return makeGenbaInfoWidget();
                   }
                   //-------------------------//
 
@@ -191,9 +120,17 @@ class WorkTimeDisplayPage extends ConsumerWidget {
                         ),
                         IconButton(
                           onPressed: () {
-                            //
+                            if (start != '') {
+                              ref
+                                  .watch(workTimeSettingProvider.notifier)
+                                  .setWorkTime(flag: 'start', time: start);
+                            }
 
-                            //
+                            if (end != '') {
+                              ref
+                                  .watch(workTimeSettingProvider.notifier)
+                                  .setWorkTime(flag: 'end', time: end);
+                            }
 
                             Navigator.push(
                               context,
@@ -222,8 +159,81 @@ class WorkTimeDisplayPage extends ConsumerWidget {
   }
 
   ///
+  Widget makeGenbaInfoWidget() {
+    return Container(
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.white.withOpacity(0.8),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(wtsItem.company),
+          Text(wtsItem.genba),
+
+          //
+
+          Container(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(wtsItem.workSum),
+                ),
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.topRight,
+                    child: Text((wtsItem.salary == '')
+                        ? ''
+                        : wtsItem.salary.toCurrency()),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    alignment: Alignment.topRight,
+                    child: Text((wtsItem.hourSalary == '')
+                        ? ''
+                        : wtsItem.hourSalary.toCurrency()),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          //
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(),
+              Row(
+                children: [
+                  Text((startEndMap['start'] == null)
+                      ? ''
+                      : startEndMap['start']!),
+                  const SizedBox(width: 10),
+                  const Text('〜'),
+                  const SizedBox(width: 10),
+                  Text((startEndMap['end'] == null) ? '' : startEndMap['end']!),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  ///
   void makeWtsList() {
     wtsTimes = [];
+    startEndMap = {};
 
     /////////////////////////////////////
     final workTimeState = _ref.watch(workTimeProvider);
