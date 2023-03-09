@@ -2,15 +2,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:worktime3/screens/work_time_input_screen.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/genba_worktime.dart';
 import '../../models/wts_item.dart';
 import '../../models/wts_time.dart';
+import '../../state/work_time_setting/work_time_setting_notifier.dart';
 import '../../utility/utility.dart';
 import '../../viewmodel/holiday_notifier.dart';
 import '../../viewmodel/work_time_notifier.dart';
+import '../work_time_input_screen.dart';
 
 class WorkTimeDisplayPage extends ConsumerWidget {
   WorkTimeDisplayPage({super.key, required this.ym});
@@ -35,6 +36,8 @@ class WorkTimeDisplayPage extends ConsumerWidget {
     makeWtsList();
 
     final holidayState = ref.watch(holidayProvider);
+
+    final workTimeSettingState = ref.watch(workTimeSettingProvider);
 
     return Scaffold(
       body: Stack(fit: StackFit.expand, children: [
@@ -188,6 +191,10 @@ class WorkTimeDisplayPage extends ConsumerWidget {
                         ),
                         IconButton(
                           onPressed: () {
+                            //
+
+                            //
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
