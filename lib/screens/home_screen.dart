@@ -2,9 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:worktime3/extensions/extensions.dart';
 
 import '../viewmodel/work_time_notifier.dart';
 import '_pages/work_time_display_page.dart';
+import '_pages/worktime_dialog.dart';
+import '_pages/worktime_estimate_alert.dart';
 
 class TabInfo {
   TabInfo(this.label, this.widget);
@@ -18,6 +21,8 @@ class HomeScreen extends ConsumerWidget {
 
   List<TabInfo> tabs = [];
 
+  late String selectedYm;
+
   late WidgetRef _ref;
 
   ///
@@ -27,14 +32,43 @@ class HomeScreen extends ConsumerWidget {
 
     makeYmTab();
 
+    selectedYm = DateTime.now().yyyymm;
+
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
+        //
+
         appBar: AppBar(
           elevation: 0,
           title: const Text('Work Time'),
-          centerTitle: true,
           backgroundColor: Colors.transparent,
+          actions: <Widget>[
+            Container(
+              margin: const EdgeInsets.only(top: 10),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      WorktimeDialog(
+                        context: context,
+                        widget: WorktimeEstimateAlert(ym: selectedYm),
+                      );
+                    },
+                    child: SizedBox(
+                      width: 60,
+                      child: Column(
+                        children: const [
+                          Icon(Icons.ac_unit),
+                          Text('Estimate'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
           flexibleSpace: Stack(
             children: [
               Container(
@@ -55,14 +89,22 @@ class HomeScreen extends ConsumerWidget {
           bottom: TabBar(
             isScrollable: true,
             indicatorColor: Colors.blueAccent,
+            onTap: (int index) {
+              selectedYm = tabs[index].label;
+            },
             tabs: tabs.map((TabInfo tab) {
               return Tab(text: tab.label);
             }).toList(),
           ),
         ),
+
+        //
+
         body: TabBarView(
           children: tabs.map((tab) => tab.widget).toList(),
         ),
+
+        //
       ),
     );
   }
