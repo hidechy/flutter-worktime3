@@ -77,18 +77,17 @@ class WorkTimeSummaryNotifier extends StateNotifier<List<WtsItem>> {
 ////////////////////////////////////////////////
 
 ////////////////////////////////////////////////
-final workTimeProvider =
-    StateNotifierProvider.autoDispose<WorkTimeNotifier, List<GenbaWorkTime>>(
-        (ref) {
+final genbaWorkTimeProvider = StateNotifierProvider.autoDispose<
+    GenbaWorkTimeNotifier, List<GenbaWorkTime>>((ref) {
   final client = ref.read(httpClientProvider);
 
   final utility = Utility();
 
-  return WorkTimeNotifier([], client, utility)..getWorkTime();
+  return GenbaWorkTimeNotifier([], client, utility)..getWorkTime();
 });
 
-class WorkTimeNotifier extends StateNotifier<List<GenbaWorkTime>> {
-  WorkTimeNotifier(super.state, this.client, this.utility);
+class GenbaWorkTimeNotifier extends StateNotifier<List<GenbaWorkTime>> {
+  GenbaWorkTimeNotifier(super.state, this.client, this.utility);
 
   final HttpClient client;
   final Utility utility;

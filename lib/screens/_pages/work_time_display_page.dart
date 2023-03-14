@@ -1,19 +1,22 @@
-// ignore_for_file: must_be_immutable, cascade_invocations
+// ignore_for_file: must_be_immutable, cascade_invocations, depend_on_referenced_packages
+import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../extensions/extensions.dart';
 import '../../models/genba_worktime.dart';
 import '../../models/wts_item.dart';
 import '../../models/wts_time.dart';
+import '../../state/app_param/app_param_notifier.dart';
 import '../../state/work_time_setting/work_time_setting_notifier.dart';
 import '../../utility/utility.dart';
 import '../../viewmodel/holiday_notifier.dart';
 import '../../viewmodel/work_time_notifier.dart';
 import '../work_time_input_screen.dart';
 
-class WorkTimeDisplayPage extends ConsumerWidget {
+class WorkTimeDisplayPage extends HookConsumerWidget {
   WorkTimeDisplayPage({super.key, required this.ym});
 
   final String ym;
@@ -36,6 +39,14 @@ class WorkTimeDisplayPage extends ConsumerWidget {
     makeWtsList();
 
     final holidayState = ref.watch(holidayProvider);
+
+    useEffect(() {
+      Future.microtask(() async {
+        await ref.watch(appParamProvider.notifier).setYm(ym: ym);
+      });
+
+      return null;
+    }, []);
 
     return Scaffold(
       body: Stack(fit: StackFit.expand, children: [
@@ -236,10 +247,10 @@ class WorkTimeDisplayPage extends ConsumerWidget {
     startEndMap = {};
 
     /////////////////////////////////////
-    final workTimeState = _ref.watch(workTimeProvider);
+    final genbaWorkTimeState = _ref.watch(genbaWorkTimeProvider);
 
     final timeMap = <String, GenbaWorkTime>{};
-    workTimeState.forEach((element) {
+    genbaWorkTimeState.forEach((element) {
       timeMap['${element.company}|${element.genba}'] = element;
     });
     /////////////////////////////////////

@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:worktime3/extensions/extensions.dart';
 
 import '../viewmodel/work_time_notifier.dart';
 import '_pages/work_time_display_page.dart';
@@ -21,8 +20,6 @@ class HomeScreen extends ConsumerWidget {
 
   List<TabInfo> tabs = [];
 
-  late String selectedYm;
-
   late WidgetRef _ref;
 
   ///
@@ -31,8 +28,6 @@ class HomeScreen extends ConsumerWidget {
     _ref = ref;
 
     makeYmTab();
-
-    selectedYm = DateTime.now().yyyymm;
 
     return DefaultTabController(
       length: tabs.length,
@@ -52,7 +47,7 @@ class HomeScreen extends ConsumerWidget {
                     onTap: () {
                       WorktimeDialog(
                         context: context,
-                        widget: WorktimeEstimateAlert(ym: selectedYm),
+                        widget: WorktimeEstimateAlert(),
                       );
                     },
                     child: SizedBox(
@@ -89,9 +84,6 @@ class HomeScreen extends ConsumerWidget {
           bottom: TabBar(
             isScrollable: true,
             indicatorColor: Colors.blueAccent,
-            onTap: (int index) {
-              selectedYm = tabs[index].label;
-            },
             tabs: tabs.map((TabInfo tab) {
               return Tab(text: tab.label);
             }).toList(),
