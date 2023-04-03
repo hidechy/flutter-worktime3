@@ -111,16 +111,14 @@ class WorktimeEstimateAlert extends ConsumerWidget {
             total += dispData[3].toDouble() * 60;
           }
 
+          final color = (DateTime.now().isBefore(ymd))
+              ? Colors.transparent
+              : Colors.yellowAccent.withOpacity(0.1);
+
           list.add(
-            Container(
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.only(bottom: 10),
+            DecoratedBox(
               decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Colors.white.withOpacity(0.3),
-                  ),
-                ),
+                color: color,
               ),
               child: Row(
                 children: dispData.map((e) {
@@ -134,13 +132,20 @@ class WorktimeEstimateAlert extends ConsumerWidget {
     });
 
     list.add(
-      Row(
-        children: [
-          Expanded(flex: 3, child: Container()),
-          Expanded(
-            child: Text((total / 60).toString()),
-          ),
-        ],
+      Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.only(top: 10, bottom: 20),
+        decoration: BoxDecoration(
+          color: Colors.yellowAccent.withOpacity(0.1),
+        ),
+        child: Row(
+          children: [
+            Expanded(flex: 3, child: Container()),
+            Expanded(
+              child: Text((total / 60).toString()),
+            ),
+          ],
+        ),
       ),
     );
 
