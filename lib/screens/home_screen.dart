@@ -50,10 +50,10 @@ class HomeScreen extends ConsumerWidget {
                         widget: WorktimeEstimateAlert(),
                       );
                     },
-                    child: SizedBox(
+                    child: const SizedBox(
                       width: 60,
                       child: Column(
-                        children: const [
+                        children: [
                           Icon(Icons.ac_unit),
                           Text('Estimate'),
                         ],
