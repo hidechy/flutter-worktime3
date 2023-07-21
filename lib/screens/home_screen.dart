@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:worktime3/screens/_pages/worktime_result_alert.dart';
 
 import '../viewmodel/work_time_notifier.dart';
 import '_pages/work_time_display_page.dart';
@@ -43,6 +44,23 @@ class HomeScreen extends ConsumerWidget {
               margin: const EdgeInsets.only(top: 10),
               child: Row(
                 children: [
+                  GestureDetector(
+                    onTap: () {
+                      WorktimeDialog(
+                        context: context,
+                        widget: WorktimeResultAlert(),
+                      );
+                    },
+                    child: const SizedBox(
+                      width: 60,
+                      child: Column(
+                        children: [
+                          Icon(Icons.list),
+                          Text('Result'),
+                        ],
+                      ),
+                    ),
+                  ),
                   GestureDetector(
                     onTap: () {
                       WorktimeDialog(
